@@ -27,10 +27,13 @@ describe('GET /api/topics', ()=>{
             })
         })
     })
-   test('404: responds with Not Found if passes a wrong path', ()=>{
-    return request(app)
-    .get('/api/banana')
-    .expect(404)
-    
-   })
+})
+
+describe('GET /api/topics', ()=>{
+    test('404: responds with Not Found if passes a wrong path', ()=>{
+        return request(app)
+        .get('/api/banana')
+        .expect(404)
+        
+       })
 })
