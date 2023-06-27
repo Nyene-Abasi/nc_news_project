@@ -8,3 +8,4 @@ exports.selectAllTopics = (req, res)=>{
     return rows
    })
 }
+
