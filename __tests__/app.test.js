@@ -95,7 +95,7 @@ describe('GET /api', () => {
         .expect(400)
         .then(({body})=>{
           const {msg}= body
-          expect(msg).toBe("Invalid Input")
+          expect(msg).toBe("Bad request")
         })
   
     });

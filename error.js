@@ -1,5 +1,4 @@
 exports.forCustomErrors = (err, req, res, next) => {
-    console.log("hce");
     if (err.status && err.msg) {
       res.status(err.status).send({ msg: err.msg });
     } else {
@@ -9,8 +8,7 @@ exports.forCustomErrors = (err, req, res, next) => {
 
   exports.forPgErrors = (err, req, res, next) => {
     if (err.code === "22P02") {
-      console.log("I worked");
-      res.status(400).send({ msg: "Invalid Input" });
+      res.status(400).send({ msg: "Bad request" });
     } else {
       next(err);
     }
