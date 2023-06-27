@@ -10,7 +10,7 @@ exports.selectAllTopics = (req, res)=>{
 }
 
 exports.selectAllArticles = (req, res) =>{
-   return db.query('SELECT * FROM articles')
+   return db.query('SELECT article_id, title, topic, author, created_at, votes, article_img_url FROM articles')
    .then(({rows})=>{
     return rows
    })

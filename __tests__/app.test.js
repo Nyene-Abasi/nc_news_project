@@ -61,23 +61,26 @@ describe('GET /api', () => {
   });
 
   describe('GET /api/articles', ()=>{
-    test('200: responds withan array of all article object', ()=>{
+    test('200: responds withan array of all article object excluding the body property', ()=>{
         return request(app)
         .get('/api/articles')
         .expect(200)
         .then(({body})=>{
-            const { articles } = body
-            expect(articles).toHaveLength(13)
-            articles.forEach((article)=>{
-              expect(article).toHaveProperty("article_id", expect.any(Number));
-              expect(article).toHaveProperty("title", expect.any(String));
-              expect(article).toHaveProperty("topic", expect.any(String));
-              expect(article).toHaveProperty("author", expect.any(String));
-              expect(article).toHaveProperty("body", expect.any(String));
-              expect(article).toHaveProperty("created_at", expect.any(String));
-              expect(article).toHaveProperty("votes", expect.any(Number));
-              expect(article).toHaveProperty("article_img_url", expect.any(String));
-            })
+          const {articles} = body
+          expect(articles).toHaveLength(13)
+          articles.forEach((article)=>{
+            expect(article).toHaveProperty("article_id", expect.any(Number));
+            expect(article).toHaveProperty("title", expect.any(String));
+            expect(article).toHaveProperty("topic", expect.any(String));
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).not.toHaveProperty("body")
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty("article_img_url", expect.any(String));
+          })
+            
         })
-    })
-})
+  
+    });
+    
+  })
