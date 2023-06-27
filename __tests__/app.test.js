@@ -6,6 +6,7 @@ const seed = require('../db/seeds/seed')
 const endPoints = require('../endpoints.json')
 
 
+
 beforeEach(()=>{
    return seed(data) 
 })
@@ -47,6 +48,7 @@ describe('GET /api', () => {
         .expect(200)
         .then(({body})=>{
           const { api } = body
+          expect(api).toEqual
           for(let key in api){
             expect(api[key]).toHaveProperty("description",  expect.any(String));
             expect(api[key]).toHaveProperty("queries", expect.any(Array));
@@ -57,3 +59,25 @@ describe('GET /api', () => {
   
     });
   });
+
+  describe('GET /api/articles', ()=>{
+    test('200: responds withan array of all article object', ()=>{
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body})=>{
+            const { articles } = body
+            expect(articles).toHaveLength(13)
+            articles.forEach((article)=>{
+              expect(article).toHaveProperty("article_id", expect.any(Number));
+              expect(article).toHaveProperty("title", expect.any(String));
+              expect(article).toHaveProperty("topic", expect.any(String));
+              expect(article).toHaveProperty("author", expect.any(String));
+              expect(article).toHaveProperty("body", expect.any(String));
+              expect(article).toHaveProperty("created_at", expect.any(String));
+              expect(article).toHaveProperty("votes", expect.any(Number));
+              expect(article).toHaveProperty("article_img_url", expect.any(String));
+            })
+        })
+    })
+})

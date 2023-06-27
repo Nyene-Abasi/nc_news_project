@@ -9,3 +9,9 @@ exports.selectAllTopics = (req, res)=>{
    })
 }
 
+exports.selectAllArticles = (req, res) =>{
+   return db.query('SELECT * FROM articles')
+   .then(({rows})=>{
+    return rows
+   })
+}
