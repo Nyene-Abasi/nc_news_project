@@ -4,6 +4,7 @@ const db =require('../db/connection')
 const data = require('../db/data/test-data')
 const seed = require('../db/seeds/seed')
 
+
 beforeEach(()=>{
    return seed(data) 
 })
@@ -39,7 +40,7 @@ describe('GET /api/topics', ()=>{
 })
 
 describe('GET /api', () => {
-    test("200: should return a key value pairs of endpoint objects", () => {
+    test("should return a key value pairs of endpoint objects", () => {
       return request(app)
         .get("/api")
         .expect(200)
