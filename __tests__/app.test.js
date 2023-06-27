@@ -82,5 +82,15 @@ describe('GET /api', () => {
         })
   
     });
-    
+    test('article should be ordered by dates in descending order',()=>{
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body})=>{
+          const {articles} = body
+          expect(articles).toBeSorted('created_at')
+     
+    })
+  })
+
   })
