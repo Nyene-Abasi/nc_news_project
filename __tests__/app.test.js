@@ -3,6 +3,7 @@ const app = require('../app')
 const db =require('../db/connection')
 const data = require('../db/data/test-data')
 const seed = require('../db/seeds/seed')
+const endPoints = require('../endpoints.json')
 
 
 beforeEach(()=>{
@@ -47,9 +48,9 @@ describe('GET /api', () => {
         .then(({body})=>{
           const { api } = body
           for(let key in api){
-            expect(api[key]).toHaveProperty("description", expect.any(String));
+            expect(api[key]).toHaveProperty("description",  expect.any(String));
             expect(api[key]).toHaveProperty("queries", expect.any(Array));
-            expect(api[key]).toHaveProperty("format", expect.any(String));
+            expect(api[key]).toHaveProperty("format",   expect.any(String));
             expect(api[key]).toHaveProperty("exampleResponse", expect.any(Object));
           }
         })
