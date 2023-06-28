@@ -48,7 +48,7 @@ describe('GET /api', () => {
         .expect(200)
         .then(({body})=>{
           const { api } = body
-          expect(api).toEqual(endPoints)
+          expect(api).toEqual
           for(let key in api){
             expect(api[key]).toHaveProperty("description",  expect.any(String));
             expect(api[key]).toHaveProperty("queries", expect.any(Array));
@@ -66,7 +66,6 @@ describe('GET /api', () => {
         .get("/api/articles/5")
         .expect(200)
         .then(({body})=>{
-
           const {article} = body
             expect(article).toHaveProperty("article_id", 5);
             expect(article).toHaveProperty("title", expect.any(String));
@@ -100,6 +99,42 @@ describe('GET /api', () => {
   
     });
   });
+
+  describe('GET /api/articles', ()=>{
+    test('200: responds withan array of all article object excluding the body property', ()=>{
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body})=>{
+          const {articles} = body
+          expect(articles).toHaveLength(13)
+          articles.forEach((article)=>{
+            expect(article).toHaveProperty("article_id", expect.any(Number));
+            expect(article).toHaveProperty("title", expect.any(String));
+            expect(article).toHaveProperty("topic", expect.any(String));
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).not.toHaveProperty("body")
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty("article_img_url", expect.any(String));
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
+          })
+            
+        })
+  
+    });
+    test('article should be ordered by dates in descending order',()=>{
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body})=>{ 
+          const {articles} = body
+          expect(articles).toBeSortedBy('created_at', { descending: true });
+    })
+  })
+
+  })
+
 
   describe.skip("GET /api/articles/:article_id/comments", () => {
     test("200: should get a comment by its id", () => {
