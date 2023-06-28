@@ -77,6 +77,7 @@ describe('GET /api', () => {
             expect(article).toHaveProperty("created_at", expect.any(String));
             expect(article).toHaveProperty("votes", expect.any(Number));
             expect(article).toHaveProperty("article_img_url", expect.any(String));
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
           })
             
         })
@@ -88,7 +89,7 @@ describe('GET /api', () => {
         .expect(200)
         .then(({body})=>{
           const {articles} = body
-          expect(articles).toBeSorted('created_at')
+          expect(articles).toBeSortedBy('created_at', { descending: true });
      
     })
   })

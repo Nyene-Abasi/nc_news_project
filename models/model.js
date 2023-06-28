@@ -9,9 +9,13 @@ exports.selectAllTopics = (req, res)=>{
    })
 }
 
-exports.selectAllArticles = (req, res) =>{
-   return db.query('SELECT article_id, title, topic, author, created_at, votes, article_img_url FROM articles ORDER BY created_at DESC;')
+exports.selectAllArticles = () =>{
+   return db.query('SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at DESC;')
    .then(({rows})=>{
-    return rows
+      return rows.map((rows)=>{
+         rows.comment_count = +rows.comment_count
+         return rows
+      })
    })
 }
+
