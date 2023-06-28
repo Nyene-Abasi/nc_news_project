@@ -13,3 +13,7 @@ exports.forCustomErrors = (err, req, res, next) => {
       next(err);
     }
   }
+
+  exports.forServerErrors = (err, req, res, next) =>{
+    res.status(500).send({ msg: 'Internal Server Error' });
+  }
