@@ -33,19 +33,14 @@ exports.selectAllArticles = () =>{
 }
 
 exports.selectArticleidComment = (article_id) =>{
-   return db.query('SELECT comments.comment_id, articles.body, articles.votes, articles.author, articles.created_at, articles.article_id FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ORDER BY comments.created_at DESC WHERE articles.article_id = $1;', [article_id])
+   if(article_id === NaN){
+      return Promise.reject({ status: 400, msg: 'Bad request'})
+   }
 
-   .then(({ rows })=>{
-      
-      if(rows.length !== 0){
-         return rows[0]
-     }
-     else{
-         return Promise.reject({status: 404, msg: "Not Found"})
-     }
+   return db.query('SELECT * FROM comments WHERE article_id = $1', [article_id])
+   .then(({rows})=>{
+      return rows
    })
-      }
 
 
-
-
+}
