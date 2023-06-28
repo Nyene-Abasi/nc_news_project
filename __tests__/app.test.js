@@ -160,7 +160,7 @@ describe('GET /api', () => {
     });
     test("200: should return 200 for an empty array for request with no comments", () => {
       return request(app)
-        .get("/api/articles/100/comments")
+        .get("/api/articles/2/comments")
         .expect(200)
         .then(({body})=>{
           const {comments}= body
@@ -175,6 +175,17 @@ describe('GET /api', () => {
         .then(({body})=>{
           const {msg}= body
           expect(msg).toBe("Bad request")
+        })
+  
+    });
+
+    test("should return error with msg Not Found if id doesn't exist", () => {
+      return request(app)
+        .get("/api/articles/30/comments")
+        .expect(404)
+        .then(({body})=>{
+          const {msg}= body
+          expect(msg).toBe("Not Found")
         })
   
     });
