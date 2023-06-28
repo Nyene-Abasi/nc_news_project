@@ -100,3 +100,45 @@ describe('GET /api', () => {
   
     });
   });
+
+  describe.skip("GET /api/articles/:article_id/comments", () => {
+    test("200: should get a comment by its id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({body})=>{
+
+          const {article} = body
+            expect(article).toHaveProperty("article_id", 1);
+            expect(article).toHaveProperty("comment_id", expect.any(Number));
+            expect(article).toHaveProperty("body", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            
+        })
+  
+    });
+    xtest("should return error with msg Not Found for request not in database", () => {
+      return request(app)
+        .get("/api/articles/99999999")
+        .expect(404)
+        .then(({body})=>{
+          const {msg}= body
+          expect(msg).toBe("Not Found")
+        })
+  
+    });
+    xtest("should return error with msg Invalid Input for wrong user input", () => {
+      return request(app)
+        .get("/api/articles/hello")
+        .expect(400)
+        .then(({body})=>{
+          const {msg}= body
+          expect(msg).toBe("Bad request")
+        })
+  
+    });
+  });
+
+  
