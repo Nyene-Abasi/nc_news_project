@@ -145,13 +145,15 @@ describe('GET /api', () => {
 
           const {comments} = body
 
+          expect(comments).toHaveLength(2)
+
           comments.forEach((comment)=>{
             expect(comment).toHaveProperty("comment_id", expect.any(Number));
             expect(comment).toHaveProperty("body", expect.any(String));
             expect(comment).toHaveProperty("votes", expect.any(Number));
             expect(comment).toHaveProperty("author", expect.any(String));
             expect(comment).toHaveProperty("created_at", expect.any(String))
-            expect(comment).toHaveProperty("article_id", expect.any(Number));
+            expect(comment).toHaveProperty("article_id", 5);
           })
         })
   

@@ -33,7 +33,7 @@ exports.selectAllArticles = () =>{
 }
 
 exports.selectArticleidComment = (article_id) =>{
-   if(article_id === NaN){
+   if(isNaN(article_id)){
       return Promise.reject({ status: 400, msg: 'Bad request'})
    }
 
