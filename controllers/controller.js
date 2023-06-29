@@ -38,7 +38,7 @@ exports.getArticleId =(req, res, next) =>{
 exports.getArticleidComment = (req, res, next) =>{
     const { article_id } = req.params
     selectArticleidComment(article_id).then((result)=>{
-        res.status(200).send({article: result})
+        res.status(200).send({comments: result})
     }).catch((err)=>{
         next(err)
     })

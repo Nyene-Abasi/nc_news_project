@@ -136,41 +136,56 @@ describe('GET /api', () => {
   })
 
 
-  describe.skip("GET /api/articles/:article_id/comments", () => {
+  describe("GET /api/articles/:article_id/comments", () => {
     test("200: should get a comment by its id", () => {
       return request(app)
-        .get("/api/articles/1/comments")
+        .get("/api/articles/5/comments")
         .expect(200)
         .then(({body})=>{
 
-          const {article} = body
-            expect(article).toHaveProperty("article_id", 1);
-            expect(article).toHaveProperty("comment_id", expect.any(Number));
-            expect(article).toHaveProperty("body", expect.any(String));
-            expect(article).toHaveProperty("votes", expect.any(Number));
-            expect(article).toHaveProperty("author", expect.any(String));
-            expect(article).toHaveProperty("created_at", expect.any(String));
-            
+          const {comments} = body
+
+          expect(comments).toHaveLength(2)
+
+          comments.forEach((comment)=>{
+            expect(comment).toHaveProperty("comment_id", expect.any(Number));
+            expect(comment).toHaveProperty("body", expect.any(String));
+            expect(comment).toHaveProperty("votes", expect.any(Number));
+            expect(comment).toHaveProperty("author", expect.any(String));
+            expect(comment).toHaveProperty("created_at", expect.any(String))
+            expect(comment).toHaveProperty("article_id", 5);
+          })
         })
   
     });
-    xtest("should return error with msg Not Found for request not in database", () => {
+    test("200: should return 200 for an empty array for request with no comments", () => {
       return request(app)
-        .get("/api/articles/99999999")
-        .expect(404)
+        .get("/api/articles/2/comments")
+        .expect(200)
         .then(({body})=>{
-          const {msg}= body
-          expect(msg).toBe("Not Found")
+          const {comments}= body
+          expect(comments).toEqual([])
         })
   
     });
-    xtest("should return error with msg Invalid Input for wrong user input", () => {
+    test("should return error with msg Bad request when wrong id is passed", () => {
       return request(app)
-        .get("/api/articles/hello")
+        .get("/api/articles/wrong/comments")
         .expect(400)
         .then(({body})=>{
           const {msg}= body
           expect(msg).toBe("Bad request")
+        })
+  
+    });
+
+    test("should return error with msg Not Found if id doesn't exist", () => {
+      return request(app)
+        .get("/api/articles/30/comments")
+        .expect(404)
+        .then(({body})=>{
+          const {msg}= body
+          expect(msg).toBe("Not Found")
         })
   
     });
