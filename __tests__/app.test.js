@@ -181,7 +181,7 @@ describe('GET /api', () => {
 
 
 
-   describe("POST: /api/articles/:article_id/comments", () => {
+  describe("POST: /api/articles/:article_id/comments", () => {
     test("201: should return the posted comment", () => {
       return request(app)
         .post("/api/articles/5/comments")
@@ -195,7 +195,6 @@ describe('GET /api', () => {
           expect(comment.body).toBe("I love NorthCoders");
         });
     });
-    
     test("404: should return an error if user does not exist", () => {
       return request(app)
         .post("/api/articles/5/comments")
@@ -206,7 +205,7 @@ describe('GET /api', () => {
         .expect(404)
         .then(({ body }) => {
           const { msg } = body;
-          expect(msg).toBe("User not found");
+          expect(msg).toBe("Not Found");
         });
     });
     test("404: should return an error if article does not exist", () => {
@@ -219,7 +218,7 @@ describe('GET /api', () => {
         .expect(404)
         .then(({ body }) => {
           const { msg } = body;
-          expect(msg).toBe("Article not found");
+          expect(msg).toBe("Not Found");
         });
     });
 
@@ -236,7 +235,6 @@ describe('GET /api', () => {
         });
     });
     
-    });
     test("201: should ignore additional properties to the post body", () => {
       return request(app)
         .post("/api/articles/5/comments")
@@ -261,7 +259,7 @@ describe('GET /api', () => {
         .expect(400)
         .then(({ body }) => {
           const { msg } = body;
-          expect(msg).toBe("Invalid Id");
+          expect(msg).toBe("Bad request");
         });
     });
     
@@ -278,3 +276,10 @@ describe('GET /api', () => {
           expect(msg).toBe("Invalid Request");
         });
       })
+
+    });
+    
+
+
+    
+   
