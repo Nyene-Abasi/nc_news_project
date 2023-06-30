@@ -1,4 +1,4 @@
-const { selectAllTopics, selectArticleId, selectArticleidComment, selectAllArticles, insertCommentToArticle, selectAllUsers, increaseVotes } = require('../models/model')
+const { selectAllTopics, selectArticleId, selectArticleidComment, selectAllArticles, insertCommentToArticle, selectAllUsers, increaseVotes, deleteComment } = require('../models/model')
 const endPoints = require('../endpoints.json')
 
 
@@ -80,4 +80,14 @@ exports.addIncreasedVotes = (req, res, next) =>{
 
         res.status(200).send({article: result[0]})
     }).catch((err)=>{next(err)})
+}
+exports.commentDeleted = (req, res, next) =>{
+    const {comment_id} = req.params
+
+    deleteComment(comment_id)
+    .then((result)=>{
+        res.status(204).send({comment: result})  
+    }).catch((err)=>{
+        next(err)
+    })
 }
