@@ -1,4 +1,4 @@
-const { selectAllTopics, selectArticleId, selectArticleidComment, selectAllArticles, insertCommentToArticle } = require('../models/model')
+const { selectAllTopics, selectArticleId, selectArticleidComment, selectAllArticles, insertCommentToArticle, selectAllUsers } = require('../models/model')
 const endPoints = require('../endpoints.json')
 
 
@@ -61,4 +61,12 @@ exports.getArticleidComment = (req, res, next) =>{
     insertCommentToArticle(article_id, msg).then((result)=>{
         res.status(201).send({comment: result})
     }).catch((err)=>{next(err)})
+}
+
+exports.getUsers = (req, res, next) => {
+    selectAllUsers().then((users)=>{
+        res.status(200).send({users})
+    }) .catch((err)=>{
+        next(err)
+    })
 }
