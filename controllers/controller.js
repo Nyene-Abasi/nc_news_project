@@ -78,7 +78,6 @@ exports.addIncreasedVotes = (req, res, next) =>{
     increaseVotes(article_id, incVotes)
     .then((result)=>{
 
-        console.log(result);
         res.status(200).send({article: result[0]})
     }).catch((err)=>{next(err)})
 }
