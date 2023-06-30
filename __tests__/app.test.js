@@ -296,6 +296,41 @@ describe('GET /api', () => {
       })
     })
 
+    describe('204: DELETE /api/comments/:comment_id should delete comment', ()=>{
+      test('204: should delete the given comment by comment_id', () => {
+        return request(app)
+          .delete('/api/comments/2')
+          .expect(204)
+          .then((res) => {
+            expect(res.statusCode).toBe(204);
+            expect(res.body).toEqual({});
+          });
+      });
+
+          test('400: should return error if comment_id is NaN ', () =>{
+            return request(app)
+              .delete('/api/comments/banana')
+              .expect(400)
+              .then((res)=>{
+               expect(res.statusCode).toBe(400);
+              expect(res.body.msg).toBe('Bad request');  
+              })
+        })
+
+        test('404: should return error if comment_id does not exist ', () =>{
+          return request(app)
+            .delete('/api/comments/9999')
+            .expect(404)
+            .then((res)=>{
+            
+              expect(res.statusCode).toBe(404);
+              expect(res.body.msg).toBe('Not Found');
+            })
+      })
+
+      })
+
+
 
     
    
