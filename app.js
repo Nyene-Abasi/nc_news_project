@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTopics, getAllApi, getArticleId, getArticleidComment, getAllArticles, sendComments, getUsers } = require('./controllers/controller');
+const { getTopics, getAllApi, getArticleId, getArticleidComment, getAllArticles, sendComments, getUsers, addIncreasedVotes } = require('./controllers/controller');
 const { forCustomErrors, forPgErrors, forServerErrors } = require('./error');
 
 const app = express();
@@ -13,6 +13,7 @@ app.get('/api/articles/:article_id/comments', getArticleidComment);
 app.get('/api/articles', getAllArticles);
 app.post('/api/articles/:article_id/comments', sendComments);
 app.get('/api/users', getUsers)
+app.patch('/api/articles/:article_id', addIncreasedVotes)
 
 app.use(forCustomErrors);
 app.use(forPgErrors);
