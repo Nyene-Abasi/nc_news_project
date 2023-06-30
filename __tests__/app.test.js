@@ -296,6 +296,89 @@ describe('GET /api', () => {
       })
     })
 
+    describe('PATCH: /api/articles/4', ()=>{
+      test('200: should increase vote count', ()=>{
+        return request(app)
+        .patch("/api/articles/4")
+        .send({incVotes: 3})
+        .expect(200)
+        .then(({body})=>{
+          const {article} = body
+          expect(article.votes).toBe(3)
+        })
+      })
+      test('400: should return Bad request for non integer type', ()=>{
+        return request(app)
+        .patch("/api/articles/banana")
+        .send({incVotes: 3})
+        .expect(400)
+        .then(({body})=>{
+          const {msg} = body
+          expect(msg).toBe('Bad request')
+        })
+      })
+      test('400: should return error if property to be added is wronng', ()=>{
+        return request(app)
+        .patch("/api/articles/12")
+        .send({snacks: 3})
+        .expect(400)
+        .then(({body})=>{
+          const {msg} = body
+          expect(msg).toBe('Bad request')
+        })
+      })
+      test('404: should return not found if article does not exist', ()=>{
+        return request(app)
+        .patch("/api/articles/5555")
+        .send({incVotes: -3})
+        .expect(404)
+        .then(({body})=>{
+          const {msg} = body
+          expect(msg).toBe('Not Found')
+        })
+      })
+
+      test('400: should return error if property is not a number', ()=>{
+        return request(app)
+        .patch("/api/articles/12")
+        .send({snacks: 'three votes'})
+        .expect(400)
+        .then(({body})=>{
+          const {msg} = body
+          expect(msg).toBe('Bad request')
+        })
+      })
+      test('200: should return the new patched article', ()=>{
+        return request(app)
+        .patch("/api/articles/4")
+        .send({incVotes: 3})
+        .expect(200)
+        .then(({body})=>{
+          
+          const {article} = body
+          expect(article).toHaveProperty("article_id", 4);
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("author", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("votes", 3);
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+        })
+      })
+
+      test('200: should decrease the votes by decremented amount', ()=>{
+        return request(app)
+        .patch("/api/articles/1")
+        .send({incVotes: -5})
+        .expect(200)
+        .then(({body})=>{
+          const { article } = body
+          expect(article.votes).toBe(95)
+         
+        })
+      })
+    
+    })
     describe('204: DELETE /api/comments/:comment_id should delete comment', ()=>{
       test('204: should delete the given comment by comment_id', () => {
         return request(app)

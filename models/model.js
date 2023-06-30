@@ -42,6 +42,7 @@ function selectAllArticles  () {
             return rows
          })
       }
+      
       async function insertCommentToArticle(article_id, msg) {
         let { username, body } = msg;
    
@@ -69,6 +70,28 @@ function selectAllArticles  () {
          })
       }
 
+      async function increaseVotes(article_id, incVotes) {
+         async function check (article_id){
+        const dbId = await db.query('SELECT * FROM articles WHERE article_id = $1', [article_id])
+    
+           if (dbId.rows.length === 0) {
+             
+             return Promise.reject({status: 404, msg: 'Not Found'})
+           } else {
+           
+             const updatedVotes = dbId.rows[0].votes;
+             return db.query('UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *;', [updatedVotes + incVotes, article_id])
+               .then(({ rows }) => {
+                return rows
+               })
+           }
+            }
+
+            const articleExist = await check(article_id);
+            return articleExist
+         }
+
+      
       
      function deleteComment(comment_id) {
        return db
@@ -83,4 +106,4 @@ function selectAllArticles  () {
        });
     }
 
-      module.exports = { insertCommentToArticle, selectArticleidComment, selectAllArticles,  selectArticleId,  selectAllTopics, selectAllUsers, deleteComment}
+      module.exports = { insertCommentToArticle, selectArticleidComment, selectAllArticles,  selectArticleId,  selectAllTopics, selectAllUsers, deleteComment, increaseVotes}
