@@ -60,4 +60,13 @@ function selectAllArticles  () {
         return rows[0];
       }
 
-      module.exports = { insertCommentToArticle, selectArticleidComment, selectAllArticles,  selectArticleId,  selectAllTopics}
+
+      
+      function selectAllUsers (req, res){
+         return db.query('SELECT * FROM users')
+         .then(({rows})=>{
+          return rows
+         })
+      }
+
+      module.exports = { insertCommentToArticle, selectArticleidComment, selectAllArticles,  selectArticleId,  selectAllTopics, selectAllUsers}
