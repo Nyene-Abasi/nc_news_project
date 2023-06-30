@@ -337,6 +337,17 @@ describe('GET /api', () => {
           expect(msg).toBe('Not Found')
         })
       })
+
+      test.only('400: should return error if property is not a number', ()=>{
+        return request(app)
+        .patch("/api/articles/12")
+        .send({snacks: 'three votes'})
+        .expect(400)
+        .then(({body})=>{
+          const {msg} = body
+          expect(msg).toBe('Bad request')
+        })
+      })
       test('200: should return the new patched article', ()=>{
         return request(app)
         .patch("/api/articles/4")
