@@ -338,7 +338,7 @@ describe('GET /api', () => {
         })
       })
 
-      test.only('400: should return error if property is not a number', ()=>{
+      test('400: should return error if property is not a number', ()=>{
         return request(app)
         .patch("/api/articles/12")
         .send({snacks: 'three votes'})
