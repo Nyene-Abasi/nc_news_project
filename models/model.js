@@ -22,15 +22,41 @@ function selectArticleId (article_id) {
    })
 }
 
-function selectAllArticles  () {
-   return db.query('SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at DESC;')
-   .then(({rows})=>{
-      return rows.map((rows)=>{
-         rows.comment_count = +rows.comment_count
-         return rows
-      })
-   })
-}
+function selectAllArticles(topic, sort_by = "created_at", order = "desc") {
+   const orderValues = ["desc", "asc"];
+   const sortByValues = [
+     "created_at",
+     "topic",
+     "article_id",
+     "votes",
+     "article_img_url",
+     "comment_count",
+     "author",
+     "title",
+   ];
+   const queryArray = [];
+   let query =
+     "SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON articles.article_id = comments.article_id ";
+ 
+   if (topic) {
+     queryArray.push(topic);
+     query += `WHERE topic LIKE $1 `;
+   }
+   if (!sortByValues.includes(sort_by.toLowerCase())) {
+     return Promise.reject({ status: 400, msg: "Bad Request: Invalid sort_by value" });
+   }
+   if (!orderValues.includes(order.toLowerCase())) {
+     return Promise.reject({ status: 400, msg: "Bad Request: Invalid order value" });
+   }
+   query += `GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
+   return db.query(query, queryArray).then(({ rows }) => {
+     return rows.map((row) => {
+       row.votes = +row.votes;
+       row.comment_count = +row.comment_count;
+       return row;
+     });
+   });
+ }
 
 
      function selectArticleidComment (article_id){
