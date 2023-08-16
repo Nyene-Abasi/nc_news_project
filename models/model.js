@@ -2,7 +2,7 @@ const db = require('../db/connection')
 const format = require('pg-format')
 
 
-function selectAllTopics (req, res){
+function selectAllTopics (){
    return db.query('SELECT * FROM topics')
    .then(({rows})=>{
     return rows
@@ -11,8 +11,7 @@ function selectAllTopics (req, res){
 
 function selectArticleId (article_id) {
    return db.query('SELECT * FROM articles WHERE article_id = $1', [article_id])
-   .then(({ rows })=>{
-      
+   .then(( { rows } )=>{
       if(rows.length !== 0){
          return rows[0]
      }
@@ -50,6 +49,7 @@ function selectAllArticles(topic, sort_by = "created_at", order = "desc") {
    }
    query += `GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
    return db.query(query, queryArray).then(({ rows }) => {
+    
      return rows.map((row) => {
        row.votes = +row.votes;
        row.comment_count = +row.comment_count;
@@ -69,54 +69,55 @@ function selectAllArticles(topic, sort_by = "created_at", order = "desc") {
          })
       }
       
-      async function insertCommentToArticle(article_id, msg) {
+      function insertCommentToArticle(article_id, msg) {
         let { username, body } = msg;
-   
+    
         if (!username) {
-          return Promise.reject({ status: 400, msg: "User not defined" });
-        }    
-        if (!body.length) {
-          return Promise.reject({ status: 400, msg: "Invalid Request" });
+            return Promise.reject({ status: 400, msg: "User not defined" });
         }
-      
-        const result = await db.query(
-          "INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;",
-          [article_id, username, body]
-        );
-        const { rows } = result;
-        return rows[0];
-      }
+        if (!body.length) {
+            return Promise.reject({ status: 400, msg: "Invalid Request" });
+        }
+    
+        return db.query(
+            "INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;",
+            [article_id, username, body]
+        )
+        .then(result => {
+          
+            const { rows } = result;
+            return rows[0];
+        });
+    }
+    
 
-
       
-      function selectAllUsers (req, res){
+      function selectAllUsers (){
          return db.query('SELECT * FROM users')
          .then(({rows})=>{
           return rows
          })
       }
 
-      async function increaseVotes(article_id, incVotes) {
-         async function check (article_id){
-        const dbId = await db.query('SELECT * FROM articles WHERE article_id = $1', [article_id])
-    
-           if (dbId.rows.length === 0) {
-             
-             return Promise.reject({status: 404, msg: 'Not Found'})
-           } else {
-           
-             const updatedVotes = dbId.rows[0].votes;
-             return db.query('UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *;', [updatedVotes + incVotes, article_id])
-               .then(({ rows }) => {
-                return rows
-               })
-           }
-            }
-
-            const articleExist = await check(article_id);
-            return articleExist
-         }
-
+      function increaseVotes(article_id, incVotes) {
+        function check(article_id) {
+          return db.query('SELECT * FROM articles WHERE article_id = $1', [article_id])
+            .then((dbId) => {
+              if (dbId.rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Not Found' });
+              } else {
+                const updatedVotes = dbId.rows[0].votes;
+                return db.query('UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *;', [updatedVotes + incVotes, article_id])
+                  .then(({ rows }) => {
+                    return rows;
+                  });
+              }
+            });
+        }
+      
+        return check(article_id);
+      }
+      
       
       
      function deleteComment(comment_id) {

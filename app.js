@@ -20,6 +20,9 @@ app.post('/api/articles/:article_id/comments', sendComments);
 app.get('/api/users', getUsers)
 app.patch('/api/articles/:article_id', addIncreasedVotes)
 app.delete('/api/comments/:comment_id', commentDeleted)
+app.get('*', (req, res) => {
+    res.status(404).send({msg:'Path not found'});
+  })
 
 app.use(forCustomErrors);
 app.use(forPgErrors);
